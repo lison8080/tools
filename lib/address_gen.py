@@ -2,65 +2,49 @@
 """生成具体到门牌号的中国地址和邮政编码"""
 
 import random
+import json
+import os
 
-# 真实的中国地址和邮政编码数据
-REAL_ADDRESSES = [
-    # 北京市
-    {'province': '北京市', 'city': '北京市', 'district': '东城区', 'streets': ['长安街', '王府井大街', '东单北大街', '建国门内大街'], 'postcode': '100010'},
-    {'province': '北京市', 'city': '北京市', 'district': '西城区', 'streets': ['西单北大街', '复兴门内大街', '金融街', '阜成门内大街'], 'postcode': '100032'},
-    {'province': '北京市', 'city': '北京市', 'district': '朝阳区', 'streets': ['建国路', '朝阳路', '三里屯路', '望京街'], 'postcode': '100020'},
-    {'province': '北京市', 'city': '北京市', 'district': '海淀区', 'streets': ['中关村大街', '学院路', '清华东路', '北四环西路'], 'postcode': '100080'},
+# 全局变量存储邮编数据
+POSTCODE_DATA = {}
+VALID_POSTCODES = []
+
+def load_postcode_data():
+    """从address.json加载邮编数据并提取非零邮编"""
+    global POSTCODE_DATA, VALID_POSTCODES
     
-    # 上海市
-    {'province': '上海市', 'city': '上海市', 'district': '黄浦区', 'streets': ['南京东路', '淮海中路', '人民大道', '西藏中路'], 'postcode': '200001'},
-    {'province': '上海市', 'city': '上海市', 'district': '徐汇区', 'streets': ['衡山路', '肇嘉浜路', '天钥桥路', '漕溪北路'], 'postcode': '200030'},
-    {'province': '上海市', 'city': '上海市', 'district': '浦东新区', 'streets': ['世纪大道', '浦东南路', '张杨路', '陆家嘴环路'], 'postcode': '200120'},
-    {'province': '上海市', 'city': '上海市', 'district': '杨浦区', 'streets': ['五角场', '国定路', '四平路', '大学路'], 'postcode': '200433'},
+    # 获取当前脚本所在目录
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    json_path = os.path.join(current_dir, 'address.json')
     
-    # 广东省广州市
-    {'province': '广东省', 'city': '广州市', 'district': '天河区', 'streets': ['天河路', '体育东路', '林和西路', '珠江新城'], 'postcode': '510630'},
-    {'province': '广东省', 'city': '广州市', 'district': '越秀区', 'streets': ['中山路', '北京路', '解放路', '东风路'], 'postcode': '510030'},
-    {'province': '广东省', 'city': '广州市', 'district': '海珠区', 'streets': ['江南大道', '新港路', '滨江路', '工业大道'], 'postcode': '510220'},
-    
-    # 广东省深圳市
-    {'province': '广东省', 'city': '深圳市', 'district': '福田区', 'streets': ['深南大道', '福华路', '益田路', '彩田路'], 'postcode': '518033'},
-    {'province': '广东省', 'city': '深圳市', 'district': '南山区', 'streets': ['深南大道', '科技园', '后海大道', '南海大道'], 'postcode': '518052'},
-    {'province': '广东省', 'city': '深圳市', 'district': '罗湖区', 'streets': ['人民南路', '建设路', '东门路', '宝安南路'], 'postcode': '518001'},
-    
-    # 浙江省杭州市
-    {'province': '浙江省', 'city': '杭州市', 'district': '西湖区', 'streets': ['文二路', '教工路', '天目山路', '西溪路'], 'postcode': '310012'},
-    {'province': '浙江省', 'city': '杭州市', 'district': '上城区', 'streets': ['延安路', '解放路', '庆春路', '建国路'], 'postcode': '310002'},
-    {'province': '浙江省', 'city': '杭州市', 'district': '滨江区', 'streets': ['滨盛路', '江南大道', '西兴路', '长河路'], 'postcode': '310051'},
-    
-    # 江苏省南京市
-    {'province': '江苏省', 'city': '南京市', 'district': '鼓楼区', 'streets': ['中山路', '中央路', '汉中路', '湖南路'], 'postcode': '210008'},
-    {'province': '江苏省', 'city': '南京市', 'district': '玄武区', 'streets': ['中山东路', '珠江路', '北京东路', '龙蟠路'], 'postcode': '210018'},
-    
-    # 四川省成都市
-    {'province': '四川省', 'city': '成都市', 'district': '武侯区', 'streets': ['人民南路', '科华路', '红牌楼', '桐梓林路'], 'postcode': '610041'},
-    {'province': '四川省', 'city': '成都市', 'district': '锦江区', 'streets': ['红星路', '春熙路', '东大街', '盐市口'], 'postcode': '610021'},
-    {'province': '四川省', 'city': '成都市', 'district': '高新区', 'streets': ['天府大道', '剑南大道', '益州大道', '世纪城路'], 'postcode': '610041'},
-    
-    # 湖北省武汉市
-    {'province': '湖北省', 'city': '武汉市', 'district': '武昌区', 'streets': ['中南路', '武珞路', '解放路', '中北路'], 'postcode': '430071'},
-    {'province': '湖北省', 'city': '武汉市', 'district': '江汉区', 'streets': ['解放大道', '建设大道', '中山大道', '新华路'], 'postcode': '430023'},
-    
-    # 陕西省西安市
-    {'province': '陕西省', 'city': '西安市', 'district': '雁塔区', 'streets': ['小寨路', '长安路', '电子路', '高新路'], 'postcode': '710061'},
-    {'province': '陕西省', 'city': '西安市', 'district': '莲湖区', 'streets': ['北大街', '西大街', '莲湖路', '桃园路'], 'postcode': '710003'},
-    
-    # 天津市
-    {'province': '天津市', 'city': '天津市', 'district': '和平区', 'streets': ['南京路', '和平路', '滨江道', '赤峰道'], 'postcode': '300041'},
-    {'province': '天津市', 'city': '天津市', 'district': '河西区', 'streets': ['友谊路', '平山道', '围堤道', '大沽南路'], 'postcode': '300202'},
-    
-    # 重庆市
-    {'province': '重庆市', 'city': '重庆市', 'district': '渝中区', 'streets': ['解放碑', '民权路', '邹容路', '八一路'], 'postcode': '400010'},
-    {'province': '重庆市', 'city': '重庆市', 'district': '江北区', 'streets': ['观音桥', '建新东路', '红旗河沟', '北滨路'], 'postcode': '400020'},
+    try:
+        with open(json_path, 'r', encoding='utf-8') as f:
+            POSTCODE_DATA = json.load(f)
+        
+        # 提取所有不为"0"和不为"000000"的邮编
+        VALID_POSTCODES = [
+            (postcode, district) 
+            for postcode, district in POSTCODE_DATA.items() 
+            if postcode != "0" and postcode != "000000" and not postcode.startswith("00000")
+        ]
+        
+        print(f"成功加载 {len(VALID_POSTCODES)} 个有效邮编")
+        return True
+    except Exception as e:
+        print(f"加载邮编数据失败: {e}")
+        return False
+
+# 常用街道名称
+COMMON_STREETS = [
+    '人民路', '解放路', '中山路', '建设路', '和平路', '胜利路', 
+    '光明路', '文化路', '新华路', '育才路', '民主路', '幸福路',
+    '东风路', '西大街', '南门街', '北环路', '中心大道', '府前街',
+    '工业路', '商业街', '学府路', '体育路', '公园路', '滨河路'
 ]
 
 def generate_address(count=1):
     """
-    生成中国地址和邮政编码
+    生成中国地址和邮政编码（从address.json中读取真实邮编）
     
     Args:
         count: 生成的地址数量，默认为1
@@ -68,19 +52,30 @@ def generate_address(count=1):
     Returns:
         包含地址信息的字典列表
     """
+    # 确保已加载邮编数据
+    if not VALID_POSTCODES:
+        if not load_postcode_data():
+            print("无法加载邮编数据，无法生成地址")
+            return []
+    
     # 常见建筑类型
     building_types = ['号', '号楼', '号院']
     
     addresses = []
     for i in range(count):
-        # 从真实地址数据中随机选择
-        addr_data = random.choice(REAL_ADDRESSES)
+        # 从有效邮编中随机选择
+        postcode, district_name = random.choice(VALID_POSTCODES)
         
-        province = addr_data['province']
-        city = addr_data['city']
-        district = addr_data['district']
-        street_name = random.choice(addr_data['streets'])
-        postcode = addr_data['postcode']
+        # 解析地区信息（尝试智能分割）
+        # 邮编对应的区县名称
+        district = district_name.strip()
+        
+        # 根据区县名猜测省市（简化处理）
+        # 这里可以根据邮编前缀判断省份
+        province, city = parse_province_city(postcode, district)
+        
+        # 随机选择街道
+        street_name = random.choice(COMMON_STREETS)
         
         # 生成门牌号
         building_number = random.randint(1, 999)
@@ -110,6 +105,67 @@ def generate_address(count=1):
     
     return addresses
 
+def parse_province_city(postcode, district):
+    """根据邮编前缀推断省份和城市"""
+    prefix = postcode[:2]
+    
+    # 邮编前两位到省份的映射
+    province_map = {
+        '10': ('北京市', '北京市'),
+        '11': ('北京市', '北京市'),
+        '12': ('天津市', '天津市'),
+        '13': ('河北省', '石家庄市'),
+        '14': ('山西省', '太原市'),
+        '15': ('内蒙古自治区', '呼和浩特市'),
+        '20': ('上海市', '上海市'),
+        '21': ('辽宁省', '沈阳市'),
+        '22': ('吉林省', '长春市'),
+        '23': ('黑龙江省', '哈尔滨市'),
+        '24': ('辽宁省', '沈阳市'),
+        '25': ('吉林省', '长春市'),
+        '26': ('黑龙江省', '哈尔滨市'),
+        '30': ('上海市', '上海市'),
+        '31': ('江苏省', '南京市'),
+        '32': ('江苏省', '南京市'),
+        '33': ('浙江省', '杭州市'),
+        '34': ('安徽省', '合肥市'),
+        '35': ('福建省', '福州市'),
+        '36': ('江西省', '南昌市'),
+        '37': ('山东省', '济南市'),
+        '40': ('河南省', '郑州市'),
+        '41': ('河南省', '郑州市'),
+        '42': ('湖北省', '武汉市'),
+        '43': ('湖南省', '长沙市'),
+        '44': ('广东省', '广州市'),
+        '45': ('广西壮族自治区', '南宁市'),
+        '46': ('海南省', '海口市'),
+        '50': ('重庆市', '重庆市'),
+        '51': ('四川省', '成都市'),
+        '52': ('贵州省', '贵阳市'),
+        '53': ('云南省', '昆明市'),
+        '54': ('西藏自治区', '拉萨市'),
+        '61': ('陕西省', '西安市'),
+        '62': ('甘肃省', '兰州市'),
+        '63': ('青海省', '西宁市'),
+        '64': ('宁夏回族自治区', '银川市'),
+        '65': ('新疆维吾尔自治区', '乌鲁木齐市'),
+        '71': ('台湾省', '台北市'),
+        '81': ('香港特别行政区', '香港'),
+        '82': ('澳门特别行政区', '澳门'),
+    }
+    
+    # 获取省份和默认城市
+    province, city = province_map.get(prefix, ('中国', '未知市'))
+    
+    # 尝试从区县名中提取市名
+    if '市' in district and district != city:
+        # 如果区县名包含市，可能是直辖市的区或者地级市
+        city_match = district.split('市')[0] + '市'
+        if len(city_match) < 10:  # 合理的市名长度
+            city = city_match
+    
+    return province, city
+
 def print_addresses(addresses):
     """格式化输出地址信息"""
     for idx, addr in enumerate(addresses, 1):
@@ -126,11 +182,17 @@ def print_addresses(addresses):
         print(f"  门牌号: {addr['门牌号']}")
 
 if __name__ == '__main__':
-    # 生成10个地址
-    addresses = generate_address(count=10)
-    print_addresses(addresses)
-    
-    print(f"\n{'='*50}")
-    print(f"共生成 {len(addresses)} 个地址")
-    print(f"{'='*50}")
+    print("正在加载邮编数据...")
+    if load_postcode_data():
+        print(f"数据加载成功！共 {len(VALID_POSTCODES)} 个有效邮编\n")
+        
+        # 生成10个地址
+        addresses = generate_address(count=10)
+        print_addresses(addresses)
+        
+        print(f"\n{'='*50}")
+        print(f"共生成 {len(addresses)} 个地址")
+        print(f"{'='*50}")
+    else:
+        print("加载邮编数据失败，请检查 address.json 文件是否存在")
 
