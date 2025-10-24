@@ -1,0 +1,198 @@
+25.4.10
+解决函数FindData在使用"??"查找时找不到的问题
+
+
+25.1.1
+解决AoJia64.dll不能在Win11 24H2加载的问题
+更新后AoJia32.dll, AoJia64.dll需要插件包中的onnxruntime.dll才能调用,所以发布程序时需要把onnxruntime.dll和AoJia32.dll, AoJia64.dll放在同一个文件夹
+
+
+24.7.7
+加强后台图色模式DXD,修复有些窗口后台图色模式无效的问题
+
+
+24.5.18
+内核功能全面支持Win7及以上所有系统,包括Win10所有旧版本系统
+
+
+24.5.10
+1.解决从内核层读写内存的方式1在地址不正确时会导致系统蓝屏的问题
+2.修复函数KQHouTai, InjectDllM, UnInjectDllM的方式9会导致目标进程崩溃的问题
+3.函数SetHouTaiType, SetHouTaiType6, SetAsmCallType增加几种执行模式
+
+
+24.5.7
+1.函数KQHouTai的参数Screen增加一个值"DXD",这个值用于解决有些窗口后台图色无效的问题
+2.函数KQHouTai的参数Flag增加一个值"NFR",这个值用于解决有些窗口在使用"WGC"后台图色模式时,图色坐标不能相对于窗口客户区左上角的问题
+3.函数KQHouTai的参数Type增加几种注入方式,使用这几种注入方式能隐藏注入的Dll
+4.增加从内存注入Dll的功能,增加函数InjectDllM, UnInjectDllM, GetDllInfoM
+5.解决函数AddDict在有些情况下不能添加字库的问题
+6.修复函数MoveRA, MoveRAD, MoveRAQ在有些情况下不能准确移动的问题
+7.解决函数KQHouTai的方式0在有些情况下会导致目标进程崩溃的问题
+8.增加线程保护盾的功能,增加函数SetThreadProtect, GetThreadHandle, CloseThreadHandle
+9.内核功能支持到Win11 22631
+10.增加隐藏内存的功能,增加函数HideMemory
+11.增加隐藏窗口的功能,增加函数HideWindowH
+12.增加发送HTTP Get/Post请求的功能,增加函数SetTimeOut, SetVerifySSL, SetRedirect, SetHeader, SetProxy, SendHttpGet, SendHttpGetS, SendHttpPost, SendHttpPostS, SendHttpPostD, SendHttpPostDS
+13.增加函数ReadFileM, WriteFileM, WaitKey, GetModuleEntryPoint, SetAsmCallType, SetHouTaiType, SetHouTaiType6, GetInverseColor, CreateRemoteThreadProtect, CreateRemoteThreadKn, SendPaste
+
+
+24.3.18
+1.增加函数SetObjectNamesEncode
+2.修复按键函数在有些窗口不能按下方向键的问题
+
+
+24.3.17
+优化函数LoadObjectNames, LoadObjectNamesM, MakeYoloLabelFile, MakeYoloTrainFile, 解决优化前的一些问题
+
+
+24.3.9
+1.函数KQHouTai的参数Mouse增加一个值"MLPD",这个值用于解决有些窗口后台鼠标无效的问题
+2.函数KQHouTai的参数Mouse增加一个值"MCD",这个值用于解决有些窗口不能获取后台鼠标特征码的问题
+3.函数KQHouTai的参数Flag增加一个值"LAD",这个值用于解决有些窗口后台键鼠无效的问题
+4.解决32位插件在Win7系统上关闭后台时报错的问题
+
+
+24.2.18
+1.优化函数SetClipboard
+2.增加函数SendStringEx
+
+
+24.1.28
+优化部分内存函数和部分进程函数
+
+
+23.12.24
+优化函数StartRecordKeyMouse和StopRecordKeyMouse
+
+
+23.12.22
+1.优化函数ExecuteRecordKeyMouse
+2.增加函数RegisterHotKey, UnregisterHotKey
+
+
+23.12.5
+1.对象的错误提示修改为默认打开
+2.使用说明里增加易语言模块源码
+3.内核功能支持到最新系统
+
+
+23.12.1
+1.优化部分函数
+2.修复部分内存函数的bug
+
+
+23.10.30
+插件的所有功能都支持在Win7上调用
+
+
+23.10.24
+1.附加码长度增加到32个字符
+2.插件后台可以设置只有使用附加码才能注册成功,可以查看附加码消费记录
+3.增加函数GetHashValueS, GetHashValueF, GetHashValueM
+
+
+23.10.16
+1.优化部分函数
+2.增加函数StartRecordKeyMouse, StopRecordKeyMouse, ExecuteRecordKeyMouse, AddTopologyMap, SearchTopologyPath
+3.加强函数KQHouTai的GDI系列模式
+4.增加网络验证服务功能, 增加函数RegDEx
+
+
+23.9.5
+解决部分内核函数在有些系统上调用失败的问题
+
+
+23.8.30
+1.解决部分内核函数在有些系统上调用失败的问题
+2.增加函数SetParam64ToAddr,这个函数用于支持在易语言里传递64位参数
+
+
+23.8.24
+1.增加基于深度学习的Ocr功能,增加函数LoadModelOcr, LoadModelOcrM, LoadModelOcrP, LoadModelOcrPM, SetIntraOpNumThreadsOcr, SetGraphOptimizationLevelOcr, SetModelOcr, StrRemove, OcrD, OcrC, OcrF, OcrM, FindStrD, FindStrDEx
+2.加强函数JsonGetString, JsonGetInt, JsonGetInt64, JsonGetUInt, JsonGetUInt64, JsonGetFloat, JsonGetDouble, JsonGetBool
+3.函数KQHouTai的参数Screen增加一个值"WGC",使用这个值基本上能从任何后台窗口获取图色数据,包括Edge浏览器, UWP应用, VMware虚拟机
+
+
+23.6.30
+增加函数Base64Encode, Base64EncodeF, Base64Decode, Base64DecodeF, OpenWeb, OpenWebS, JsonGetString, JsonGetInt, JsonGetInt64, JsonGetUInt, JsonGetUInt64, JsonGetFloat, JsonGetDouble, JsonGetBool, GetLocalIP, GetLocalName, GetInternetIP, GetIPByDomainName, GetIPLocation, GetIPOperator, SortObjectPos, SortObjectPosM
+
+
+23.6.18
+增加函数GetKeyStateD, MakeYoloLabelFile, MakeYoloTrainFile, LoadModel, LoadModelM, SetModel, GetModel, LoadObjectNames, LoadObjectNamesM, GetObjectId, DetectObject, SetIntraOpNumThreads, SetGraphOptimizationLevel, DetectObjectEx, DetectObjectF, DetectObjectFEx, DetectObjectM, DetectObjectMEx, TransPicFormat, ShowPic, RecordVideo, RecordVideoC, ShowCamera, GetPicFromVideo, GetPicFromVideoEx, GetPicFromCamera, DetectObjectC, DetectObjectCEx, CreateWindowsEx, DrawRect, RedrawRect, ClearRect, FindFileEx
+
+
+23.5.14
+增加函数SetMemoryType, GetProHandle, CloseProHandle, GetProcessPriority, SetProcessPriority, GetThreadPriority, SetThreadPriority, HideProcess, DisguiseProcess, ProtectProcess, LoadLibraryM, GetProcAddressM, FreeLibraryM, FindResourceM, SizeofResourceM, LoadResourceM, LoadStringM, CallMainM, Asm, AsmAdd, AsmClear, DisAsm, DisAsmAddr, SetDisAsmFormat, GetInstructionLength, GetProcLength, AsmCall, GetPIDFromTID, IsPEFile, GetModuleExportFun, MakeResFile, LoadResFile, FreeResData, GetFileData, GetDiskType, CheckVT, HideDll, InjectDll, UnInjectDll, HideKnsys, CloseVT, HideProcessI, DisguiseProcessI, ProtectProcessI, TerminateProcessKn, TerminateThreadKn, UnLoadKnsys, SetMultiEPT, SetMemoryProtect, HideWindow, GetDesktopWindow, EnumKernelModule, GetKernelModuleBaseAddr, GetKernelModuleSize, GetKernelModulePath, HideFileI, ProtectFileI, UnProcessKn, ProtectThreadI, DetectPic, DetectPicM, DetectPicD, DetectPicDM, DetectPicEx, DetectPicMEx, DetectPicDEx, DetectPicDMEx, GetCircumscribeRect, RotationPic, ResizePic, PlayVideo, StopVideo
+
+
+22.9.1
+函数KQHouTai的参数Flag增加一个值"LH"
+
+
+22.8.27
+增加函数MoveRAD, MoveRAQ
+
+
+22.8.25
+增加函数DeleteFileKn, MoveRA
+
+
+22.8.20
+增加函数MakeDict, MakeDictM, MakeDictOs, AddDict, SaveDict, LoadDictM, 找图函数的偏色都已支持灰度和HSV格式, 插件工具增加获取窗口信息,提取多个点阵以及识字的功能
+
+
+22.8.9
+增加函数SendStringKb, GetScreenData, GetScreenDataBmp, LoadPicM, AddPicAddr, FindPicM, FindPicMEx, FindPicDM, FindPicDMEx
+
+
+22.8.3
+增加函数SetSimMode, SetMemoryMode, GetNetTime
+
+
+22.8.1
+支持多个对象给同一个窗口开启后台,每个对象可以在不同进程,函数KQHouTai的参数Screen, Keyboard, Mouse, Flag都增加一个值"FD"
+
+
+22.7.29
+优化函数GBHouTai
+
+
+22.1.31
+增加函数CompressFile和函数UnCompressFile,函数KQHouTai的参数Flag增加一个值"LK",可以用这个值指定另一种更快的OpenGL后台图色模式
+
+
+21.9.22
+修复Win7系统在设置了非Aero主题时函数CreateWindows创建的窗口显示不稳定的问题
+
+
+21.8.24
+后台增加OpenGL模式,增加函数SetCreateWindows
+
+
+21.8.13
+优化函数GetMousePos和函数SetMousePos,优化插件工具
+
+
+21.7.24
+优化后台函数
+
+
+21.7.21
+优化函数GBHouTai
+
+
+21.7.15
+优化函数PicToBmp与函数ScreenShot
+
+
+21.7.7
+修正部分函数和插件工具一些问题
+
+
+21.7.2
+优化部分函数,优化插件工具
+
+
+21.6.30
+增加函数FindStrM和函数FindStrMEx
